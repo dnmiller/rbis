@@ -121,7 +121,7 @@ end
 %   % This call throws an error.
 %   assertEqual({'A', 'B', 'C'}, {'A', 'foo', 'C'});
 %
-%   See also assertElementsAlmostEqual, assertVectorsAlmostEqual
+%   See also assertElementsAlmostEqu al, assertVectorsAlmostEqual
 
 %   Steven L. Eddins
 %   Copyright 2008-2010 The MathWorks, Inc.

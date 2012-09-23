@@ -13,7 +13,6 @@ function Y = datahankel(d, m)
 %   matrix-valued signals, such as correlation functions. Because Matlab's
 %   xcorr/xcov functions effectively vectorize signals, we must do some
 %   reshaping to get them into block-matrix form.
-
 pkgname = 'rbis';
 
 eval(['import ' pkgname '.blkhankel']);
@@ -44,14 +43,16 @@ end
 
 assert(N >= m, msg('TooShortInput'), ...
         'Block rows cannot exceed length of signal.');
-    
+
+nrows = rdim*m;
+ncols = cdim*(N - m + 1);
+
 % Memory checks.
-assert(rdim*m <= config.MAX_DATAHANKEL_ROWS, msg('TooManyRows'), ...
+assert(nrows <= config.MAX_DATAHANKEL_ROWS, msg('TooManyRows'), ...
         ['Data hankel matrix would have ' num2str(rdim*m) ' rows. ' ...
          'Maximum is ' num2str(config.MAX_DATAHANKEL_ROWS) '. '...
          'See ' pkgname '.config to change.']);
      
-ncols = (N - m + 1)*cdim;
 assert(ncols <= config.MAX_DATAHANKEL_COLS, msg('TooManyColumns'),...
         ['Data hankel matrix would have ', num2str(ncols), ' columns. ' ...
          'Maximum is ' num2str(config.MAX_DATAHANKEL_COLS) '. '...
@@ -65,38 +66,13 @@ if ismatrix(d)
     col = col(1:m*rdim);
     row = row(:,m:end);
 else
-    % Check if we've got a matrix signal, and reshape if so.
-    if size(d, 3) > 1
-        % In case the user supplied bad dimensions.
-        if size(d, 1) ~= rowdim
-            error('Invalid row dimension.');
-        elseif size(d, 2) ~= coldim
-            error('Invalid col dimension.');
-        end
-        d0 = d;
-        d = zeros(size(d, 3), rowdim*coldim);
-        for k = 1:rowdim
-            for j = 1:coldim
-                d(:, (k-1)*coldim + j) = squeeze(d0(k, j, :));
-            end
-        end
-        d = reshape(d(:), rowdim*coldim, size(d, 3))';
-    end
-    
-    N = size(d, 1);
-    
-    % Check that the dimensions make sense.
-    if size(d, 2) ~= rowdim*coldim
-        error('Number of columns of signal must = row*col.');
-    end
-    
-    col = zeros(m*rowdim, coldim);
+    col = zeros(nrows, cdim);
     for i = 1:m
-        col(rowdim*(i-1)+1:rowdim*i, :) = reshape(d(i, :), coldim, rowdim)';
+        col(rdim*(i-1)+1:rdim*i, :) = d(:, :, i);
     end
-    row = zeros(rowdim, coldim*(N-m+1));
-    for i = 1:N-m+1
-        row(:, coldim*(i-1)+1:coldim*i) = reshape(d(i+m-1, :), coldim, rowdim)';
+    row = zeros(rdim, ncols);
+    for i = 1:N - 2*m + 3
+        row(:, cdim*(i-1)+1:cdim*i) = d(:, :, i+m-1);
     end
 end
 

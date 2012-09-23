@@ -2,19 +2,19 @@ function test_blkhankel
 % Unit test for blkhankel.
 pkgname = 'rbis';
 % Bug in Matlab prevents anonymous handles to imported functions.
-f0 = @() rbis.blkhankel([]);
-f1 = @() rbis.blkhankel([], [], []);
+f1 = @() rbis.blkhankel([]);
+f3 = @() rbis.blkhankel([], [], []);
 f = @(x, y) rbis.blkhankel(x, y);
-m = rbis.test.mxunit;
 import rbis.blkhankel;
+
+m = rbis.test.mxunit;
+msg = @(x) [pkgname, ':blkhankel:', x];
 
 fprintf(['Testing ', pkgname, '.blkhankel...']);
 % Test number input arguments
 m.assertExceptionThrown(@blkhankel, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f0, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f1, 'MATLAB:TooManyInputs');
-
-msg = @(x) [pkgname, ':blkhankel:', x];
+m.assertExceptionThrown(f1, 'MATLAB:narginchk:notEnoughInputs');
+m.assertExceptionThrown(f3, 'MATLAB:TooManyInputs');
 
 % Test dimension checking.
 x = zeros(10, 1);
@@ -49,15 +49,23 @@ assertBlkEq(x, y, x);
 x = (1:5)';
 y = 5:10;
 assertBlkEq(x, y, hankel(x, y));
-blks = cell(9, 1);
-for i = 1:6
-    blks{i} = randn(2);
-end
-x = [blks{1}; blks{2}; blks{3}];
-y = [blks{3}, blks{4}, blks{5}, blks{6}];
-Z = [blks{1}, blks{2}, blks{3}, blks{4}
-     blks{2}, blks{3}, blks{4}, blks{5}
-     blks{3}, blks{4}, blks{5}, blks{6}];
+
+    function [x, y, Z] = test_with_block_dim(r, c)
+        blks = cell(6, 1);
+        for i = 1:6
+            blks{i} = randn(r, c);
+        end
+        x = [blks{1}; blks{2}; blks{3}];
+        y = [blks{3}, blks{4}, blks{5}, blks{6}];
+        Z = [blks{1}, blks{2}, blks{3}, blks{4}
+             blks{2}, blks{3}, blks{4}, blks{5}
+             blks{3}, blks{4}, blks{5}, blks{6}];
+    end
+[x, y, Z] = test_with_block_dim(2, 2);
+assertBlkEq(x, y, Z);
+[x, y, Z] = test_with_block_dim(3, 2);
+assertBlkEq(x, y, Z);
+[x, y, Z] = test_with_block_dim(2, 3);
 assertBlkEq(x, y, Z);
 
 fprintf('Passed\n');
