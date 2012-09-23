@@ -6,6 +6,13 @@ classdef mxunit
 %   that it can be distributed with test suites for Matlab packages. The
 %   original license appears below.
 %
+%   Note that the constructor for this class includes an optional package
+%   name variable. This is a workaround for deficiencies in the Matlab
+%   import statement. It's impossible to pass a function handle for a
+%   function that has been imported unless the calling function has also
+%   imported the same function. For the exception checking, the functions
+%   will always begin with "import pkgname.*".
+% 
 % -------------------------------------------------------------------------
 % Copyright (c) 2010, The MathWorks, Inc.
 % All rights reserved.
@@ -37,8 +44,11 @@ classdef mxunit
 % SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 % -------------------------------------------------------------------------
 
+    properties
+        pkgname = 0;
+    end
+
     methods (Static = true)
-        
 % -------------------------------------------------------------------------
         function assertExceptionThrown(f, expectedId, custom_message)
 %assertExceptionThrown: Assert that specified exception is thrown
@@ -69,17 +79,15 @@ classdef mxunit
 
 %   Steven L. Eddins
 %   Copyright 2008-2010 The MathWorks, Inc.
-
 noException = false;
 try
     f();
     noException = true;
-    
 catch exception
     if ~strcmp(exception.identifier, expectedId)
         message = sprintf('Expected exception %s but got exception %s.', ...
             expectedId, exception.identifier);
-        if nargin >= 3
+        if nargin >= 4
             message = sprintf('%s\n%s', custom_message, message);
         end
         throwAsCaller(MException('assertExceptionThrown:wrongException', ...
@@ -90,12 +98,56 @@ end
 if noException
     message = sprintf('Expected exception "%s", but none thrown.', ...
         expectedId);
-    if nargin >= 3
+    if nargin >= 4
         message = sprintf('%s\n%s', custom_message, message);
     end
     throwAsCaller(MException('assertExceptionThrown:noException', '%s', message));
 end
-% -------------------------------------------------------------------------
         end
+% -------------------------------------------------------------------------
+        function assertEqual(A, B, custom_message)
+%assertEqual Assert that inputs are equal
+%   assertEqual(A, B) throws an exception if A and B are not equal.  A and B
+%   must have the same class and sparsity to be considered equal.
+%
+%   assertEqual(A, B, MESSAGE) prepends the string MESSAGE to the assertion
+%   message if A and B are not equal.
+%
+%   Examples
+%   --------
+%   % This call returns silently.
+%   assertEqual([1 NaN 2], [1 NaN 2]);
+%
+%   % This call throws an error.
+%   assertEqual({'A', 'B', 'C'}, {'A', 'foo', 'C'});
+%
+%   See also assertElementsAlmostEqual, assertVectorsAlmostEqual
+
+%   Steven L. Eddins
+%   Copyright 2008-2010 The MathWorks, Inc.
+
+if nargin < 3
+    custom_message = '';
+end
+
+if ~ (issparse(A) == issparse(B))
+    message = xunit.utils.comparisonMessage(custom_message, ...
+        'One input is sparse and the other is not.', A, B);
+    throwAsCaller(MException('assertEqual:sparsityNotEqual', '%s', message));
+end
+
+if ~strcmp(class(A), class(B))
+    message = xunit.utils.comparisonMessage(custom_message, ...
+        'The inputs differ in class.', A, B);
+    throwAsCaller(MException('assertEqual:classNotEqual', '%s', message));
+end
+
+if ~isequalwithequalnans(A, B)
+    message = xunit.utils.comparisonMessage(custom_message, ...
+        'Inputs are not equal.', A, B);
+    throwAsCaller(MException('assertEqual:nonEqual', '%s', message));
+end
+        end
+% -------------------------------------------------------------------------
     end
 end
