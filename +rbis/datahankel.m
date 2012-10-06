@@ -10,14 +10,11 @@ function Y = datahankel(d, m)
 %       If size(d, 3) > 1, then d is treated as an r x c x N signal. 
 % 
 %   The second version is intended for building data matrices with
-%   matrix-valued signals, such as correlation functions. Because Matlab's
-%   xcorr/xcov functions effectively vectorize signals, we must do some
-%   reshaping to get them into block-matrix form.
+%   matrix-valued signals, such as correlation functions.
+import rbis.blkhankel;
+import rbis.config;
 pkgname = 'rbis';
-
-eval(['import ' pkgname '.blkhankel']);
-eval(['import ' pkgname '.config']);
-msg = @(x) [pkgname ':datahankel:', x];
+errid = @(x) [pkgname, ':datahankel:', x];
 
 % Validate arguments.
 narginchk(2, 2);
@@ -25,7 +22,7 @@ nargoutchk(0, 1);
 validateattributes(d, {'numeric'}, {'nonempty', 'real', 'finite'});
 validateattributes(m, {'numeric'}, {'scalar', 'positive', 'integer'});
 
-assert(ndims(d) < 4, msg('BadInput'), ...
+assert(ndims(d) < 4, errid('BadInput'), ...
     'd cannot have more than 3 dimensions.');
 
 % Determine if the signal is vector- or matrix-valued.
@@ -41,19 +38,19 @@ else
     N = size(d, 3);
 end
 
-assert(N >= m, msg('TooShortInput'), ...
+assert(N >= m, errid('TooShortInput'), ...
         'Block rows cannot exceed length of signal.');
 
 nrows = rdim*m;
 ncols = cdim*(N - m + 1);
 
-% Memory checks.
-assert(nrows <= config.MAX_DATAHANKEL_ROWS, msg('TooManyRows'), ...
+% Size-limit checks.
+assert(nrows <= config.MAX_DATAHANKEL_ROWS, errid('TooManyRows'), ...
         ['Data hankel matrix would have ' num2str(rdim*m) ' rows. ' ...
          'Maximum is ' num2str(config.MAX_DATAHANKEL_ROWS) '. '...
          'See ' pkgname '.config to change.']);
      
-assert(ncols <= config.MAX_DATAHANKEL_COLS, msg('TooManyColumns'),...
+assert(ncols <= config.MAX_DATAHANKEL_COLS, errid('TooManyColumns'),...
         ['Data hankel matrix would have ', num2str(ncols), ' columns. ' ...
          'Maximum is ' num2str(config.MAX_DATAHANKEL_COLS) '. '...
          'See ' pkgname '.config to change.']);
@@ -71,8 +68,10 @@ else
         col(rdim*(i-1)+1:rdim*i, :) = d(:, :, i);
     end
     row = zeros(rdim, ncols);
-    for i = 1:N - 2*m + 3
-        row(:, cdim*(i-1)+1:cdim*i) = d(:, :, i+m-1);
+    k = 1;
+    for i = m:N
+        row(:, cdim*(k-1)+1:cdim*k) = d(:, :, i);
+        k = k + 1;
     end
 end
 

@@ -7,14 +7,13 @@ f3 = @() rbis.blkhankel([], [], []);
 f = @(x, y) rbis.blkhankel(x, y);
 import rbis.blkhankel;
 
-m = rbis.test.mxunit;
 msg = @(x) [pkgname, ':blkhankel:', x];
 
 fprintf(['Testing ', pkgname, '.blkhankel...']);
 % Test number input arguments
-m.assertExceptionThrown(@blkhankel, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f1, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f3, 'MATLAB:TooManyInputs');
+assertExceptionThrown(@blkhankel, 'MATLAB:narginchk:notEnoughInputs');
+assertExceptionThrown(f1, 'MATLAB:narginchk:notEnoughInputs');
+assertExceptionThrown(f3, 'MATLAB:TooManyInputs');
 
 % Test dimension checking.
 x = zeros(10, 1);
@@ -33,13 +32,13 @@ y = zeros(1, 10);
 blkhankel(x, y);
 x = zeros(9, 2);
 y = zeros(2, 10);
-m.assertExceptionThrown(@() f(x, y), msg('BadDims'));
+assertExceptionThrown(@() f(x, y), msg('BadDims'));
 x = zeros(10, 2);
 y = zeros(2, 9);
-m.assertExceptionThrown(@() f(x, y), msg('BadDims'));
+assertExceptionThrown(@() f(x, y), msg('BadDims'));
 
 % Test functionality.
-assertBlkEq = @(x, y, z) m.assertEqual(z, blkhankel(x, y));
+assertBlkEq = @(x, y, z) assertEqual(z, blkhankel(x, y));
 x = 0;
 y = 0:5;
 assertBlkEq(x, y, y);

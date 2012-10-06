@@ -8,31 +8,30 @@ f = @(x, y) rbis.datahankel(x, y);
 import rbis.datahankel;
 import rbis.config;
 
-m = rbis.test.mxunit;
 msg = @(x) [pkgname, ':datahankel:', x];
 
 fprintf(['Testing ', pkgname, '.datahankel...']);
 
 % Test number of input arguments
-m.assertExceptionThrown(@datahankel, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f1, 'MATLAB:narginchk:notEnoughInputs');
-m.assertExceptionThrown(f3, 'MATLAB:TooManyInputs');
+assertExceptionThrown(@datahankel, 'MATLAB:narginchk:notEnoughInputs');
+assertExceptionThrown(f1, 'MATLAB:narginchk:notEnoughInputs');
+assertExceptionThrown(f3, 'MATLAB:TooManyInputs');
 
 % Smallest input.
 f(0, 1);
-m.assertExceptionThrown(@() f(0, 2), msg('TooShortInput'));
+assertExceptionThrown(@() f(0, 2), msg('TooShortInput'));
 % Too many rows.
 rmax = config.MAX_DATAHANKEL_ROWS;
 d = zeros(rmax + 1, 1);
 r = rmax + 1;
-m.assertExceptionThrown(@() f(d, r), msg('TooManyRows'));
+assertExceptionThrown(@() f(d, r), msg('TooManyRows'));
 % Too many columns.
 cmax = config.MAX_DATAHANKEL_COLS;
 d = zeros(3, 2, cmax/2+1);
 r = 1;
-m.assertExceptionThrown(@() f(d, r), msg('TooManyColumns'));
+assertExceptionThrown(@() f(d, r), msg('TooManyColumns'));
 
-assertMatEq = @(d, r, Y) m.assertEqual(Y, datahankel(d, r));
+assertMatEq = @(d, r, Y) assertEqual(Y, datahankel(d, r));
 % Test scalar signal.
 d = (1:9)';
 r = 3;
@@ -55,6 +54,17 @@ end
 r = 2;
 Y = [x{1}, x{2}, x{3}, x{4}, x{5}, x{6}, x{7}, x{8}
      x{2}, x{3}, x{4}, x{5}, x{6}, x{7}, x{8}, x{9}];
+assertMatEq(d, r, Y);
+x = cell(4, 1);
+d = zeros(2, 2, 4);
+for i = 1:4
+    x{i} = randn(2, 2);
+    d(:, :, i) = x{i};
+end
+r = 3;
+Y = [x{1}, x{2}
+     x{2}, x{3}
+     x{3}, x{4}];
 assertMatEq(d, r, Y);
 
 fprintf('Passed\n');

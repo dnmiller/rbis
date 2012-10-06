@@ -4,7 +4,7 @@ function [A, B, C] = hokalman(G, n)
 % 
 %   [A, B, C] = hokalman(G, n) constructs an nth-order system estimate from
 %   a sequence of Markov parameters in G. G does _not_ contain the
-%   feed-through term. 
+%   feed-through term.
 % 
 %   For a single-input system, G is organized as
 % 
@@ -15,23 +15,22 @@ function [A, B, C] = hokalman(G, n)
 %   There must be at least 2n+1 Markov parameters to construct a system
 %   estimate of rank n.
 % 
-%   For a multi-input system, G should be an ny x nu x N sequence of
-%   matrices where ny is the output dimension, nu the input dimension, and
-%   N the number of samples in the sequence.
-%   
+%   [A, B, C] = hokalman(G, n) where G is an ny x nu x N sequence of
+%   matrices will construct an nth-order system estimate with output
+%   dimensions ny and input dimension nu.
+% 
 %   The singular-value decomposition (SVD) is used to determine the
 %   state-basis, and the returned system matrices are internally-balanced
-%   (see ref).
+%   (see ref). The method will only realize minimal systems.
 % 
 % Source: Chen, Linear System Theory and Design, 1984.
 pkgname = 'rbis';
-
-eval(['import ' pkgname '.datahankel']);
-msg = @(x) [pkgname ':hokalman:', x];
+import rbis.datahankel;
+errid = @(x) [pkgname ':hokalman:', x];
 
 % Validate arguments.
 narginchk(2, 2);
-% nargoutchk(3, 3);
+validateattributes(n, {'numeric'}, {'scalar', 'positive', 'integer'});
 
 % Find the dimensions.
 if ismatrix(G)
@@ -40,11 +39,10 @@ if ismatrix(G)
 else
     [ny, nu, N] = size(G);
 end
+assert(N >= 2*n, errid('NotEnoughParam'), ['At least 2n Markov '...
+    'parameters (excluding feed-through) are necessary to realize a system.']);
 
-assert(N > 2*n, msg('NotEnoughParam'), ...
-    'At least 2n+1 Markov parameters are necessary to realize a system.');
-
-% Go for fat matrices.
+% Go for fat matrices. These dimensions are totally ad-hoc.
 rows = min(2*n, ceil((N-1)/2) + 1);
 H = datahankel(G, rows);
 

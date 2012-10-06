@@ -9,7 +9,7 @@ function H = blkhankel(C, R)
 %       The total rows of C must be a multiple of the rows of R, and the
 %       last block row of R must be equal to the first block column of C.
 pkgname = 'rbis';
-msg = @(x) [pkgname, ':blkhankel:', x];
+errid = @(x) [pkgname, ':blkhankel:', x];
 
 narginchk(2, 2);
 nargoutchk(0, 1);
@@ -22,9 +22,9 @@ blkrows = cdim(1)/rdim(1);
 blkcols = rdim(2)/cdim(2);
 
 % Error check dimensions of the input matrices.
-assert(mod(blkrows, 1) == 0, msg('BadDims'), ...
+assert(mod(blkrows, 1) == 0, errid('BadDims'), ...
         'Row dimension of C must be multiple of row dimension of R.');
-assert(mod(blkcols, 1) == 0, msg('BadDims'), ...
+assert(mod(blkcols, 1) == 0, errid('BadDims'), ...
        'Column dimension of R must be multiple of column dimension of C.');
 
 coldim = cdim(2);
@@ -34,7 +34,7 @@ rowdim = rdim(1);
 % are the same. No precedence rules as with the built-in hankel function,
 % just throw an error.
 assert(all(all(C(end-rowdim+1:end,:) == R(:,1:coldim))), ...
-        msg('BlocksNotEqual'), ...
+        errid('BlocksNotEqual'), ...
         'Last block-element of C must be first block-element of R.')
 
 % Build the block-Hankel matrix.
