@@ -9,11 +9,8 @@ Functions
   column.
 - datahankel: Construct block-hankel matrix of data from either vector- or
   matrix-valued signals.
-
-
-
-The most up-to-date source can be found at
-http://github.com/dnmiller/rbis
+- hokalman: Generate a state-space realization from Markov parameters via
+  the Ho-Kalman algorithm.
 
 This software is released under the 3-clause BSD license. See LICENSE.txt
 for details.
