@@ -2,22 +2,25 @@ function [A, B, C] = hokalman(G, n)
 % hokalman: Generate a state-space realization from a sequence of Markov
 % parameters.
 % 
-%   [A, B, C] = hokalman(G, n) constructs an nth-order system estimate from
-%   a sequence of Markov parameters in G. G does _not_ contain the
-%   feed-through term.
+%   [A, B, C] = hokalman(G, n) 
 % 
-%   For a single-input system, G is organized as
+%       If G is a matrix, construct an nth-order system estimate from a
+%       sequence of Markov parameters in G. G does _not_ contain the
+%       feed-through term.
 % 
-%       G = [G1'; G2'; G3'; ...]
+%       For a single-input system, G is organized as
 % 
-%   so that it would be the impulse response of the system, beginning with
-%   the second sample, aranged so that time increases with descending rows.
-%   There must be at least 2n+1 Markov parameters to construct a system
-%   estimate of rank n.
+%           G = [G1'; G2'; G3'; ...]
 % 
-%   [A, B, C] = hokalman(G, n) where G is an ny x nu x N sequence of
-%   matrices will construct an nth-order system estimate with output
-%   dimensions ny and input dimension nu.
+%       so that it would be the impulse response of the system, beginning
+%       with the second sample, aranged so that time increases with
+%       descending rows. There must be at least 2n+1 Markov parameters to
+%       construct a system estimate of rank n.
+% 
+%   [A, B, C] = hokalman(G, n) 
+% 
+%       If G is an ny x nu x N sequence of matrices, construct an nth-order
+%       system estimate with output dimensions ny and input dimension nu.
 % 
 %   The singular-value decomposition (SVD) is used to determine the
 %   state-basis, and the returned system matrices are internally-balanced

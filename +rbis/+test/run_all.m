@@ -4,6 +4,7 @@ try
     rbis.test.test_blkhankel;
     rbis.test.test_datahankel;
     rbis.test.test_hokalman;
+    rbis.test.test_nullproj;
 catch err
     if strcmp(err.identifier, 'MATLAB:UndefinedFunction')
         msg = sprintf('%s\n%s', err.message, ...
