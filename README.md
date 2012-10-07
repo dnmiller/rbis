@@ -11,6 +11,8 @@ Functions
   matrix-valued signals.
 - hokalman: Generate a state-space realization from Markov parameters via
   the Ho-Kalman algorithm.
+- nullproj: Calculate the projection of one matrix onto the null-space of
+  another.
 
 This software is released under the 3-clause BSD license. See LICENSE.txt
 for details.
