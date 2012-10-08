@@ -8,6 +8,8 @@ function M = nullproj(Y, X)
 %       the product
 % 
 %           M = Y*(eye(size(X, 2)) - X'/(X*X')*X)
+
+% (C) D. Miller, 2012.
 pkgname = 'rbis';
 import rbis.lq;
 errid = @(x) [pkgname, ':nullproj:', x];

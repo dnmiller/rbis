@@ -27,6 +27,8 @@ function [A, B, C] = hokalman(G, n)
 %   (see ref). The method will only realize minimal systems.
 % 
 % Source: Chen, Linear System Theory and Design, 1984.
+
+% (C) D. Miller, 2012.
 pkgname = 'rbis';
 import rbis.datahankel;
 errid = @(x) [pkgname ':hokalman:', x];

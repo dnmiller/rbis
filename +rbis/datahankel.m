@@ -11,6 +11,8 @@ function Y = datahankel(d, m)
 % 
 %   The second version is intended for building data matrices with
 %   matrix-valued signals, such as correlation functions.
+
+% (C) D. Miller, 2012.
 import rbis.blkhankel;
 import rbis.config;
 pkgname = 'rbis';

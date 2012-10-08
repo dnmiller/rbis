@@ -4,6 +4,7 @@ function varargout = version
 %   Prints current version to command window if no output argument present.
 %   Returns a string with current version if output argument is present.
 
+% (C) D. Miller, 2012.
 v = '0.2';
 
 if nargout == 0

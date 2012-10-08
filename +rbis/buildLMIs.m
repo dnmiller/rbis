@@ -57,6 +57,8 @@ function [P, Q, M] = buildLMIs(n, props, args)
 % Source: Miller, de Callafon, "Subspace Identification with Eigenvalue
 % Constraints," to appear in Automatica sometime in 2012 or 2013.
 
+% (C) D. Miller, 2012.
+
 % TODO: parse props.
     if isempty(props.DeltaS)
         ds = 1e-4;

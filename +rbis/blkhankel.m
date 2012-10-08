@@ -8,6 +8,8 @@ function H = blkhankel(C, R)
 %
 %       The total rows of C must be a multiple of the rows of R, and the
 %       last block row of R must be equal to the first block column of C.
+
+% (C) D. Miller, 2012.
 pkgname = 'rbis';
 errid = @(x) [pkgname, ':blkhankel:', x];
 

@@ -4,6 +4,8 @@ classdef config
 % These are designed to mostly help not crash Matlab by not overflowing
 % memory in a call to SeDuMi or something similar. Modify them at your own
 % risk.
+
+% (C) D. Miller, 2012.
     properties (Constant = true)
         MAX_DATAHANKEL_ROWS = 3000
         MAX_DATAHANKEL_ROWS_DOC = 'Maximum number of total rows allowed for data hankel matrices.';
