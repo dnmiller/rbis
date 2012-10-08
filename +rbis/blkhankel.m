@@ -3,7 +3,7 @@ function H = blkhankel(C, R)
 % 
 %   H = blkhankel(C, R) 
 %
-%       Construct a block-Hankel matrix with the first block colum C and
+%       Construct a block-Hankel matrix with the first block column C and
 %       the last block row R. 
 %
 %       The total rows of C must be a multiple of the rows of R, and the

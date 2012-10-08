@@ -1,5 +1,5 @@
 function varargout = version
-% version: Return the current version of the GRA toolbox.
+% version: Return the current version of the ribs toolbox.
 %
 %   Prints current version to command window if no output argument present.
 %   Returns a string with current version if output argument is present.

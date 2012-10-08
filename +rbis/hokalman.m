@@ -13,7 +13,7 @@ function [A, B, C] = hokalman(G, n)
 %           G = [G1'; G2'; G3'; ...]
 % 
 %       so that it would be the impulse response of the system, beginning
-%       with the second sample, aranged so that time increases with
+%       with the second sample, arranged so that time increases with
 %       descending rows. There must be at least 2n+1 Markov parameters to
 %       construct a system estimate of rank n.
 % 
