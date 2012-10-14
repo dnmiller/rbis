@@ -14,6 +14,7 @@ Functions
 - `nullproj`: Calculate the projection of one matrix onto the null-space of
   another.
 - `buildLMIs`: Generate LMIs for solving eigenvalue-constrained problems.
+- `isInRegion`: Determine if a matrix is in a given LMI region.
 
 This software is released under the 3-clause BSD license. See LICENSE.txt
 for details.

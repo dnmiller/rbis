@@ -5,6 +5,7 @@ try
     rbis.test.test_datahankel;
     rbis.test.test_hokalman;
     rbis.test.test_nullproj;
+    rbis.test.test_isInRegion;
 catch err
     if strcmp(err.identifier, 'MATLAB:UndefinedFunction')
         msg = sprintf('%s\n%s', err.message, ...
@@ -15,4 +16,9 @@ catch err
             'Core functions failed. Something is wrong. Please report this issue at http://github.com/dnmiller/rbis');
         throw(MException('rbis:TestAll:CoreTests', msg));
     end
+end
+
+if exist('sdpvar', 'file') ~= 2
+    fprintf(['WARNING: YALMIP not detected on path. Semi-definite ', ...
+        'constraints will not be\navailable.\n']);
 end
