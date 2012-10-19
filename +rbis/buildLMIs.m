@@ -59,7 +59,8 @@ function [P, Q, M] = buildLMIs(n, region, varargin)
 % Constraints," to appear in Automatica sometime in 2012 or 2013.
 
 % Note: There's no unit test for this. We assume the deterministic solution
-% tests are sufficient to verify that they function correctly.
+% tests are sufficient to verify that they function correctly. There is,
+% however a unit test for the similar isInRegion.
 
 % (C) D. Miller, 2012.
 pkgname = 'rbis';
