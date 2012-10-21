@@ -6,6 +6,7 @@ try
     rbis.test.test_hokalman;
     rbis.test.test_nullproj;
     rbis.test.test_isInRegion;
+    rbis.test.test_solveAC;
 catch err
     if strcmp(err.identifier, 'MATLAB:UndefinedFunction')
         msg = sprintf('%s\n%s', err.message, ...
