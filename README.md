@@ -1,7 +1,7 @@
 RBIS
 ====
 
-Realization-Based Identification Software
+Realization-Based Identification Software in Matlab.
 
 Functions
 ---------
